@@ -5,6 +5,8 @@ VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarkdownViewer", "MarkdownViewer\MarkdownViewer.csproj", "{4330839D-6448-482C-B245-79B779D23B3B}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "MarkdownViewerSetup", "MarkdownViewerSetup\MarkdownViewerSetup.vdproj", "{CEED7D93-C620-49C4-941E-C8AFDA2F1121}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,8 @@ Global
 		{4330839D-6448-482C-B245-79B779D23B3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4330839D-6448-482C-B245-79B779D23B3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4330839D-6448-482C-B245-79B779D23B3B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CEED7D93-C620-49C4-941E-C8AFDA2F1121}.Debug|Any CPU.ActiveCfg = Debug
+		{CEED7D93-C620-49C4-941E-C8AFDA2F1121}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

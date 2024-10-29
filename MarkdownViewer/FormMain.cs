@@ -19,7 +19,9 @@ namespace MarkdownViewer
 
         async void InitializeAsync()
         {
-            await webView2.EnsureCoreWebView2Async(null);
+
+            CoreWebView2Environment coreWebView2Environment = await CoreWebView2Environment.CreateAsync(null, Path.GetTempPath(), new CoreWebView2EnvironmentOptions());
+            await webView2.EnsureCoreWebView2Async(coreWebView2Environment);
 
             OpenFile(Program.FilePath);
         }

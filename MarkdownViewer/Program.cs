@@ -34,8 +34,6 @@ namespace MarkdownViewer
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new FormMain());
-
-            Directory.Delete(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "MarkdownViewer.exe.WebView2"), true);
         }
 
         static string GetFileExtension(string path)
