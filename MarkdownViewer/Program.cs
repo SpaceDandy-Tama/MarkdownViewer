@@ -13,20 +13,24 @@ namespace MarkdownViewer
         {
             if (args == null || args.Length == 0)
             {
-                MessageBox.Show("Please run Markdown Viewer with a markdown (.md) file.", "Markdown Viewer");
+                MessageBox.Show("Please run Markdown Viewer with a suitable file. Suitable files include .md, .obmd, .pdf and .txt", Application.ProductName);
                 return;
             }
             else if (args != null && args.Length > 0)
             {
-                string extension = GetFileExtension(args[0]);
+                string arg = args[0];
+                StringComparison comparison = StringComparison.OrdinalIgnoreCase;
 
-                if(extension != null && (extension == ".md" || extension == ".txt"))
+                if(arg.EndsWith(".md", comparison) || 
+                    arg.EndsWith(".obmd", comparison) || 
+                    arg.EndsWith(".pdf", comparison) || 
+                    arg.EndsWith(".txt", comparison))
                 {
                     FilePath = args[0];
                 }
                 else
                 {
-                    MessageBox.Show("Not a valid file. File must have .md or .txt extension.", "Markdown Viewer");
+                    MessageBox.Show("Not a valid file. File must have .md, .obmd, .pdf or .txt extension.", Application.ProductName);
                     return;
                 }
             }
@@ -34,14 +38,6 @@ namespace MarkdownViewer
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new FormMain());
-        }
-
-        static string GetFileExtension(string path)
-        {
-            int index = path.LastIndexOf('.');
-            if (index < 0)
-                return null;
-            return path.Substring(index);
         }
     }
 }
