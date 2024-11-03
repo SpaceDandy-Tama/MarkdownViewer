@@ -93,6 +93,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_E14ADD50F91145C381AB411E534CA855"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_E78AE028EF79AD8B09DF882B856DF4DA"
         "OwnerKey" = "8:_C8C4D935B1AE430094D8AF30C826478E"
         "MsmSig" = "8:_UNDEFINED"
@@ -101,12 +107,6 @@
         {
         "MsmKey" = "8:_EF2A8087D1644759B7BCBF3776BC79A5"
         "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_A769DFE08B01DE4D5733AB437D2A58B4"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -151,6 +151,12 @@
         "OwnerKey" = "8:_88120796C176E14881D10AE3EF6A79A5"
         "MsmSig" = "8:_UNDEFINED"
         }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_A769DFE08B01DE4D5733AB437D2A58B4"
+        "MsmSig" = "8:_UNDEFINED"
+        }
     }
     "Configurations"
     {
@@ -169,6 +175,22 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
+            }
         }
         "Release"
         {
@@ -185,6 +207,22 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
+            }
         }
     }
     "Deployable"
@@ -444,7 +482,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:MarkdownViewer, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:MarkdownViewer, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_C8C4D935B1AE430094D8AF30C826478E"
@@ -477,6 +515,26 @@
             "TargetName" = "8:WebView2Loader.dll"
             "Tag" = "8:"
             "Folder" = "8:_E905BD1B07B14397803BCE8C9044662D"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E14ADD50F91145C381AB411E534CA855"
+            {
+            "SourcePath" = "8:..\\MarkdownViewer\\Resources\\OpenBookMarkdownFileIcon.ico"
+            "TargetName" = "8:OpenBookMarkdownFileIcon.ico"
+            "Tag" = "8:"
+            "Folder" = "8:_F38D8125EF8C485EAD9F0967A306B4F1"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -560,6 +618,29 @@
                 "Verbs"
                 {
                     "{95C0C507-CBF0-42B8-B119-07219E384A4A}:_59C98992CC8A4F428DA246C5F1BF30F6"
+                    {
+                    "Command" = "8:&Open"
+                    "Verb" = "8:open"
+                    "Arguments" = "8:\"%1\""
+                    "Order" = "3:0"
+                    }
+                }
+            }
+            "{5EB83D71-FA18-4901-BE56-DE22E13CC478}:_9A9500EE715C4897AD0B01166D9DB87A"
+            {
+            "Name" = "8:Open Book Markdown File Type #%d1"
+            "Description" = "8:Open Book Markdown Document"
+            "Extensions" = "8:.obmd"
+            "MIME" = "8:text/markdownOpenBook"
+            "Icon" = "8:_E14ADD50F91145C381AB411E534CA855"
+            "IconIndex" = "3:0"
+                "Command"
+                {
+                "Command" = "8:_C8C4D935B1AE430094D8AF30C826478E"
+                }
+                "Verbs"
+                {
+                    "{95C0C507-CBF0-42B8-B119-07219E384A4A}:_FFF71C6DBEBD4699AE841C8947C13185"
                     {
                     "Command" = "8:&Open"
                     "Verb" = "8:open"
@@ -698,15 +779,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:MarkdownViewer"
-        "ProductCode" = "8:{4D28B716-044E-4746-838B-2A3BB6DFEDE6}"
-        "PackageCode" = "8:{30B5170D-AB94-477A-A41C-27463E8FECC2}"
+        "ProductCode" = "8:{30508343-3966-4348-ADA5-51D37550F0AB}"
+        "PackageCode" = "8:{8175B04F-7273-4429-AB27-325D619BCE3B}"
         "UpgradeCode" = "8:{6D14616A-6075-43A6-B95F-562226C613F7}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
-        "RemovePreviousVersions" = "11:FALSE"
+        "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:1.1"
+        "ProductVersion" = "8:1.2"
         "Manufacturer" = "8:TamaSuite"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

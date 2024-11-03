@@ -6,7 +6,6 @@ using Markdig;
 using Microsoft.Web.WebView2.Core;
 using MarkdownViewer.Properties;
 using System.Diagnostics;
-using System.Security.Policy;
 
 namespace MarkdownViewer
 {
@@ -87,24 +86,28 @@ namespace MarkdownViewer
             File.WriteAllText("debug.html", markdownHTML);
 #endif
 
-            string[] htmlLines = markdownHTML.Split('\n');
-
-            for (int i = 0; i < htmlLines.Length; i++)
+            if (inputFilePath.EndsWith(".md", StringComparison.OrdinalIgnoreCase) ||
+                inputFilePath.EndsWith(".obmd", StringComparison.OrdinalIgnoreCase))
             {
-                if (string.IsNullOrEmpty(htmlLines[i]))
-                    continue;
+                string[] htmlLines = markdownHTML.Split('\n');
 
-                htmlLines[i] = CheckAndReplaceFilePathsWithProperProtocol(htmlLines[i]);
-            }
+                for (int i = 0; i < htmlLines.Length; i++)
+                {
+                    if (string.IsNullOrEmpty(htmlLines[i]))
+                        continue;
 
-            markdownHTML = $"<!DOCTYPE html>\r\n<html lang=\"en\">\r\n    <head>\r\n        <meta charset=\"UTF-8\">\r\n        <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\r\n        <title>{Path.GetFileName(inputFilePath)}</title>\r\n    </head>\r\n    <body>\r\n";
-            foreach (string line in htmlLines)
-            {
-                if (string.IsNullOrWhiteSpace(line))
-                    continue;
-                markdownHTML += $"        {line}\r\n";
+                    htmlLines[i] = CheckAndReplaceFilePathsWithProperProtocol(htmlLines[i]);
+                }
+
+                markdownHTML = $"<!DOCTYPE html>\r\n<html lang=\"en\">\r\n    <head>\r\n        <meta charset=\"UTF-8\">\r\n        <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\r\n        <title>{Path.GetFileName(inputFilePath)}</title>\r\n    </head>\r\n    <body>\r\n";
+                foreach (string line in htmlLines)
+                {
+                    if (string.IsNullOrWhiteSpace(line))
+                        continue;
+                    markdownHTML += $"        {line}\r\n";
+                }
+                markdownHTML += "    </body>\r\n</html>";
             }
-            markdownHTML += "    </body>\r\n</html>";
 
             string path = Path.Combine(Path.GetTempPath(), "MarkdownViewerRebuilt.html");
             File.WriteAllText(path, markdownHTML);
