@@ -5,6 +5,8 @@ using System.Windows.Forms;
 using Markdig;
 using Microsoft.Web.WebView2.Core;
 using MarkdownViewer.Properties;
+using System.Diagnostics;
+using System.Security.Policy;
 
 namespace MarkdownViewer
 {
@@ -32,47 +34,60 @@ namespace MarkdownViewer
             OpenFile(Program.FilePath);
         }
 
-        //TODO: Use a css file for windows light/dark theming.
-
         private void OpenFile(string inputFilePath)
         {
-            if (inputFilePath.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase))
+            try
             {
-                try
+                if (inputFilePath.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase))
                 {
                     webView2.CoreWebView2.Navigate(inputFilePath);
                 }
-                catch (Exception e)
+                else
                 {
-                    MessageBox.Show(e.Message, Application.ProductName);
-                }
-            }
-            else
-            {
-                string markdownText = File.ReadAllText(inputFilePath);
-                string markdownHTML = Markdown.ToHtml(markdownText);
+                    string rebuiltHtmlFilePath = RebuildHtmlForLocalFiles(inputFilePath);
 
-#if DEBUG
-                File.WriteAllText("debug.html", markdownHTML);
-#endif
-
-                string rebuiltHtmlFilePath = RebuildHtmlForLocalFiles(ref markdownHTML);
-
-                try
-                {
                     webView2.CoreWebView2.Navigate($"File:///{rebuiltHtmlFilePath}");
                     //webView2.NavigateToString(markdownHTML); //DOESNT WORK WITH LOCAL FILES
                 }
-                catch (Exception e)
-                {
-                    MessageBox.Show(e.Message, Application.ProductName);
-                }
+
+                webView2.CoreWebView2.NavigationCompleted += CoreWebView2_NavigationCompleted;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, Application.ProductName);
             }
         }
 
-        private string RebuildHtmlForLocalFiles(ref string htmlString)
+        private void CoreWebView2_NavigationCompleted(object sender, CoreWebView2NavigationCompletedEventArgs e)
         {
-            string[] htmlLines = htmlString.Split('\n');
+            webView2.CoreWebView2.NavigationStarting += CoreWebView2_NavigationStarting;
+            webView2.CoreWebView2.NavigationCompleted -= CoreWebView2_NavigationCompleted;
+        }
+
+        private void CoreWebView2_NavigationStarting(object sender, CoreWebView2NavigationStartingEventArgs e)
+        {
+            e.Cancel = true;
+
+            try
+            {
+                Process.Start(new ProcessStartInfo(e.Uri) { UseShellExecute = true });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred: " + ex.Message);
+            }
+        }
+
+        private string RebuildHtmlForLocalFiles(string inputFilePath)
+        {
+            string markdownText = File.ReadAllText(inputFilePath);
+            string markdownHTML = Markdown.ToHtml(markdownText);
+
+#if DEBUG
+            File.WriteAllText("debug.html", markdownHTML);
+#endif
+
+            string[] htmlLines = markdownHTML.Split('\n');
 
             for (int i = 0; i < htmlLines.Length; i++)
             {
@@ -82,17 +97,17 @@ namespace MarkdownViewer
                 htmlLines[i] = CheckAndReplaceFilePathsWithProperProtocol(htmlLines[i]);
             }
 
-            htmlString = "<!DOCTYPE html>\r\n<html lang=\"en\">\r\n    <head>\r\n        <meta charset=\"UTF-8\">\r\n        <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\r\n        <title>MarkdownViewer</title>\r\n    </head>\r\n    <body>\r\n";
+            markdownHTML = $"<!DOCTYPE html>\r\n<html lang=\"en\">\r\n    <head>\r\n        <meta charset=\"UTF-8\">\r\n        <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\r\n        <title>{Path.GetFileName(inputFilePath)}</title>\r\n    </head>\r\n    <body>\r\n";
             foreach (string line in htmlLines)
             {
                 if (string.IsNullOrWhiteSpace(line))
                     continue;
-                htmlString += $"        {line}\r\n";
+                markdownHTML += $"        {line}\r\n";
             }
-            htmlString += "    </body>\r\n</html>";
+            markdownHTML += "    </body>\r\n</html>";
 
             string path = Path.Combine(Path.GetTempPath(), "MarkdownViewerRebuilt.html");
-            File.WriteAllText(path, htmlString);
+            File.WriteAllText(path, markdownHTML);
 
             return path;
         }
@@ -122,18 +137,35 @@ namespace MarkdownViewer
                     {
                         string valueString = line.Substring(startIndex, endIndex - startIndex);
 
-                        if (!valueString.Contains(":") && File.Exists(valueString))
+                        if (!valueString.Contains(":"))
                         {
-                            //If the file exists locally, specify File protocol in the line
-                            string uri = Path.GetFullPath(valueString);
-                            uri = $"file:///{uri}";
+                            string pathFileFound = null;
 
-                            //modify the line with this
-                            string prefix = line.Substring(0, startIndex);
-                            string suffix = line.Substring(endIndex, line.Length - endIndex);
-                            string modifiedLine = prefix + uri + suffix;
+                            if (File.Exists(valueString))
+                            {
+                                pathFileFound = valueString;
+                            }
+                            else
+                            {
+                                string tempPath = Path.Combine("images", valueString);
+                                if (File.Exists(tempPath))
+                                {
+                                    pathFileFound = tempPath;
+                                }
+                            }
 
-                            return modifiedLine;
+                            if (pathFileFound != null) {
+                                //If the file exists locally, specify File protocol in the line
+                                string uri = Path.GetFullPath(pathFileFound);
+                                uri = $"file:///{uri}";
+
+                                //modify the line with this
+                                string prefix = line.Substring(0, startIndex);
+                                string suffix = line.Substring(endIndex, line.Length - endIndex);
+                                string modifiedLine = prefix + uri + suffix;
+
+                                return modifiedLine;
+                            }
                         }
                     }
                 }
