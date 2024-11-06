@@ -6,6 +6,7 @@ using Markdig;
 using Microsoft.Web.WebView2.Core;
 using MarkdownViewer.Properties;
 using System.Diagnostics;
+using OpenBookMarkdown;
 
 namespace MarkdownViewer
 {
@@ -37,17 +38,27 @@ namespace MarkdownViewer
         {
             try
             {
-                if (inputFilePath.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase))
+                string path = null;
+                if (inputFilePath.EndsWith(".md", StringComparison.OrdinalIgnoreCase))
                 {
-                    webView2.CoreWebView2.Navigate(inputFilePath);
+                    path = RebuildHtmlForLocalFiles(inputFilePath);
+                }
+                else if (inputFilePath.EndsWith(".obmd", StringComparison.OrdinalIgnoreCase))
+                {
+                    string obmdHtml = OpenBookMarkdown.OpenBookMarkdown.ToHtml(inputFilePath);
+                    path = Path.Combine(Path.GetTempPath(), "MarkdownViewerRebuilt.html");
+                    File.WriteAllText(path, obmdHtml);
                 }
                 else
                 {
-                    string rebuiltHtmlFilePath = RebuildHtmlForLocalFiles(inputFilePath);
-
-                    webView2.CoreWebView2.Navigate($"File:///{rebuiltHtmlFilePath}");
-                    //webView2.NavigateToString(markdownHTML); //DOESNT WORK WITH LOCAL FILES
+                    //pdf, txt, etc
+                    path = inputFilePath;
                 }
+
+                if (path == null)
+                    return;
+
+                webView2.CoreWebView2.Navigate($"File:///{path}");
 
                 webView2.CoreWebView2.NavigationCompleted += CoreWebView2_NavigationCompleted;
             }
@@ -86,28 +97,24 @@ namespace MarkdownViewer
             File.WriteAllText("debug.html", markdownHTML);
 #endif
 
-            if (inputFilePath.EndsWith(".md", StringComparison.OrdinalIgnoreCase) ||
-                inputFilePath.EndsWith(".obmd", StringComparison.OrdinalIgnoreCase))
+            string[] htmlLines = markdownHTML.Split('\n');
+
+            for (int i = 0; i < htmlLines.Length; i++)
             {
-                string[] htmlLines = markdownHTML.Split('\n');
+                if (string.IsNullOrEmpty(htmlLines[i]))
+                    continue;
 
-                for (int i = 0; i < htmlLines.Length; i++)
-                {
-                    if (string.IsNullOrEmpty(htmlLines[i]))
-                        continue;
-
-                    htmlLines[i] = CheckAndReplaceFilePathsWithProperProtocol(htmlLines[i]);
-                }
-
-                markdownHTML = $"<!DOCTYPE html>\r\n<html lang=\"en\">\r\n    <head>\r\n        <meta charset=\"UTF-8\">\r\n        <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\r\n        <title>{Path.GetFileName(inputFilePath)}</title>\r\n    </head>\r\n    <body>\r\n";
-                foreach (string line in htmlLines)
-                {
-                    if (string.IsNullOrWhiteSpace(line))
-                        continue;
-                    markdownHTML += $"        {line}\r\n";
-                }
-                markdownHTML += "    </body>\r\n</html>";
+                htmlLines[i] = CheckAndReplaceFilePathsWithProperProtocol(htmlLines[i]);
             }
+
+            markdownHTML = $"<!DOCTYPE html>\r\n<html lang=\"en\">\r\n    <head>\r\n        <meta charset=\"UTF-8\">\r\n        <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\r\n        <title>{Path.GetFileName(inputFilePath)}</title>\r\n    </head>\r\n    <body>\r\n";
+            foreach (string line in htmlLines)
+            {
+                if (string.IsNullOrWhiteSpace(line))
+                    continue;
+                markdownHTML += $"        {line}\r\n";
+            }
+            markdownHTML += "    </body>\r\n</html>";
 
             string path = Path.Combine(Path.GetTempPath(), "MarkdownViewerRebuilt.html");
             File.WriteAllText(path, markdownHTML);

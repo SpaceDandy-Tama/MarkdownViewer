@@ -1,0 +1,3 @@
+[submodule "OpenBookMarkdown"]
+	path = OpenBookMarkdown
+	url = git@github.com:SpaceDandy-Tama/OpenBookMarkdown.git

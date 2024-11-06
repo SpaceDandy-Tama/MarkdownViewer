@@ -129,6 +129,12 @@
   <ItemGroup>
     <None Include="Resources\MarkdownViewerIcon.png" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OpenBookMarkdown\OpenBookMarkdown\OpenBookMarkdown.csproj">
+      <Project>{785cb686-73bf-483d-a524-c02029c289d3}</Project>
+      <Name>OpenBookMarkdown</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Microsoft.Web.WebView2.1.0.2849.39\build\Microsoft.Web.WebView2.targets" Condition="Exists('..\packages\Microsoft.Web.WebView2.1.0.2849.39\build\Microsoft.Web.WebView2.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

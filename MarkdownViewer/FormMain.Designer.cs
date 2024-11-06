@@ -40,7 +40,7 @@
             this.webView2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.webView2.Location = new System.Drawing.Point(0, 0);
             this.webView2.Name = "webView2";
-            this.webView2.Size = new System.Drawing.Size(784, 461);
+            this.webView2.Size = new System.Drawing.Size(284, 361);
             this.webView2.TabIndex = 0;
             this.webView2.ZoomFactor = 1D;
             // 
@@ -48,7 +48,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(784, 461);
+            this.ClientSize = new System.Drawing.Size(284, 361);
             this.Controls.Add(this.webView2);
             this.Name = "FormMain";
             this.Text = "Markdown Viewer";
